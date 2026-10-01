@@ -3,217 +3,109 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Song To Video AI</title>
+<title>Song To Video AI - Music Film Generator</title>
 
 <style>
-*{
-  box-sizing:border-box;
-}
-
+*{box-sizing:border-box}
 body{
   margin:0;
-  background:#08080d;
-  color:#fff;
-  font-family:Arial,Helvetica,sans-serif;
+  font-family:Arial,sans-serif;
+  background:#0b0b10;
+  color:#eee;
 }
-
 .container{
-  width:min(1000px,94%);
-  margin:30px auto;
+  max-width:900px;
+  margin:auto;
+  padding:30px 18px 60px;
 }
-
-header{
-  text-align:center;
-  margin-bottom:28px;
-}
-
-header h1{
-  margin:0;
-  font-size:34px;
-  letter-spacing:1px;
-}
-
-header p{
-  color:#999;
-  margin-top:8px;
-}
-
+h1{text-align:center;margin-bottom:5px}
+.subtitle{text-align:center;color:#aaa;margin-bottom:30px}
 .card{
-  background:#111119;
+  background:#15151d;
   border:1px solid #292936;
-  border-radius:18px;
-  padding:22px;
+  border-radius:14px;
+  padding:20px;
   margin-bottom:20px;
-  box-shadow:0 10px 35px rgba(0,0,0,.25);
 }
-
-.grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:16px;
-}
-
 label{
   display:block;
-  color:#c9c9d3;
-  margin-bottom:7px;
-  font-size:14px;
+  margin:15px 0 7px;
+  color:#ccc;
+  font-weight:bold;
 }
-
-input,
-textarea,
-select{
+input,textarea,select{
   width:100%;
-  background:#191923;
-  color:white;
-  border:1px solid #343442;
-  border-radius:12px;
   padding:13px;
-  outline:none;
+  border-radius:8px;
+  border:1px solid #3a3a48;
+  background:#0e0e14;
+  color:white;
   font-size:15px;
 }
-
-input:focus,
-textarea:focus,
-select:focus{
-  border-color:#7777ff;
-}
-
 textarea{
-  min-height:220px;
+  min-height:260px;
   resize:vertical;
-  line-height:1.6;
 }
-
-.full{
-  grid-column:1/-1;
+.row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:15px;
 }
-
-.filebox{
-  border:1px dashed #555568;
-  border-radius:14px;
-  padding:18px;
-  text-align:center;
-  background:#15151e;
-}
-
 button{
+  width:100%;
+  padding:15px;
   border:0;
-  border-radius:13px;
-  padding:14px 20px;
-  font-size:15px;
+  border-radius:9px;
+  background:#7c4dff;
+  color:white;
+  font-size:17px;
   font-weight:bold;
   cursor:pointer;
-  transition:.2s;
 }
-
-button:hover{
-  transform:translateY(-1px);
-  filter:brightness(1.12);
+button:disabled{
+  opacity:.5;
+  cursor:not-allowed;
 }
-
-.primary{
-  width:100%;
-  background:white;
-  color:#09090d;
-  font-size:17px;
-  margin-top:18px;
-}
-
-.secondary{
-  background:#272733;
-  color:white;
-}
-
-.download{
-  background:#e7e7ff;
-  color:#101018;
-  width:100%;
-  margin-top:15px;
-  display:none;
-}
-
 .status{
-  text-align:center;
-  color:#aaa;
-  min-height:24px;
-  margin-top:14px;
-}
-
-.story{
-  display:none;
-}
-
-.scene{
-  background:#0c0c13;
-  border:1px solid #292936;
-  border-radius:14px;
-  padding:17px;
-  margin-bottom:12px;
-}
-
-.scene-number{
-  color:#8585ff;
-  font-size:12px;
-  font-weight:bold;
-  letter-spacing:1px;
-}
-
-.scene h3{
-  margin:8px 0;
-}
-
-.scene p{
-  color:#aaa;
-  line-height:1.5;
-  margin:6px 0;
-}
-
-.preview{
-  display:none;
-  text-align:center;
-}
-
-canvas{
-  max-width:100%;
-  background:#000;
-  border-radius:14px;
-  border:1px solid #333;
-}
-
-.progress{
-  height:8px;
-  background:#22222d;
-  border-radius:20px;
-  overflow:hidden;
   margin-top:15px;
+  padding:12px;
+  border-radius:8px;
+  background:#101018;
+  color:#bbb;
 }
-
-.progressbar{
-  height:100%;
-  width:0%;
-  background:white;
-  transition:width .1s linear;
+.character{
+  background:#101018;
+  padding:18px;
+  border-radius:10px;
+  line-height:1.6;
 }
-
-.small{
-  color:#777;
-  font-size:12px;
-  margin-top:10px;
+.scene{
+  background:#101018;
+  border:1px solid #292936;
+  border-radius:10px;
+  padding:15px;
+  margin:12px 0;
 }
-
-@media(max-width:700px){
-  .grid{
-    grid-template-columns:1fr;
-  }
-
-  header h1{
-    font-size:27px;
-  }
-
-  .full{
-    grid-column:auto;
-  }
+.scene h3{
+  margin-top:0;
+}
+.scene-number{
+  color:#9b7cff;
+  font-weight:bold;
+}
+.prompt{
+  color:#bbb;
+  font-size:14px;
+  line-height:1.5;
+}
+.error{
+  color:#ff7777;
+}
+.success{
+  color:#72e6a1;
+}
+@media(max-width:650px){
+  .row{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -222,830 +114,297 @@ canvas{
 
 <div class="container">
 
-<header>
-  <h1>🎬 Song To Video AI</h1>
-  <p>Generate cinematic music videos from your song and lyrics</p>
-</header>
+<h1>🎬 Song To Video AI</h1>
+<div class="subtitle">
+AI Music Film Generator — Gemini Story & Cinematic Storyboard
+</div>
 
 <div class="card">
 
-  <div class="grid">
+<label>Judul Lagu</label>
+<input id="title" placeholder="Contoh: When The Moon Forgot Her">
 
-    <div>
-      <label>Judul Lagu</label>
-      <input id="title" placeholder="Contoh: When The Moon Forgot Her">
-    </div>
+<label>Artis</label>
+<input id="artist" placeholder="Contoh: Dark Cathedral">
 
-    <div>
-      <label>Artis</label>
-      <input id="artist" placeholder="Contoh: Dark Cathedral">
-    </div>
+<div class="row">
 
-    <div class="full">
-      <label>🎵 Upload Lagu</label>
-
-      <div class="filebox">
-        <input id="audioFile" type="file" accept="audio/*">
-        <div id="fileName" class="small">
-          Pilih file MP3 atau WAV
-        </div>
-      </div>
-    </div>
-
-    <div class="full">
-      <label>📝 Lirik / Cerita Lagu</label>
-
-      <textarea id="lyrics" placeholder="Masukkan lirik lagu di sini...
-
-Contoh:
-
-[Verse 1]
-She walked beneath the dying stars...
-
-[Chorus]
-When the moon forgot her...
-
-[Verse 2]
-She called his name into the rain...
-
-[Outro]
-The moon may forget her name..."></textarea>
-    </div>
-
-    <div>
-      <label>🎨 Tema Visual</label>
-
-      <select id="theme">
-        <option value="dark">Dark Cinematic</option>
-        <option value="gothic">Gothic Romance</option>
-        <option value="metal">Symphonic Metal</option>
-        <option value="fantasy">Dark Fantasy</option>
-        <option value="sad">Emotional Sad</option>
-        <option value="night">Midnight Dream</option>
-      </select>
-    </div>
-
-    <div>
-      <label>📐 Rasio Video</label>
-
-      <select id="ratio">
-        <option value="16:9">16:9 — YouTube</option>
-        <option value="9:16">9:16 — Shorts / TikTok</option>
-        <option value="1:1">1:1 — Square</option>
-      </select>
-    </div>
-
-  </div>
-
-  <button class="primary" onclick="createStoryboard()">
-    ✨ Buat Storyboard
-  </button>
-
-  <div id="status" class="status"></div>
-
+<div>
+<label>Durasi Film</label>
+<select id="duration">
+<option value="4 minutes">4 menit</option>
+<option value="4 minutes 30 seconds">4 menit 30 detik</option>
+<option value="5 minutes">5 menit</option>
+</select>
 </div>
 
-
-<div id="story" class="card story">
-
-  <h2>🎞️ Storyboard</h2>
-
-  <div id="sceneList"></div>
-
-  <button class="primary" onclick="generateVideo()">
-    🎬 Generate Video
-  </button>
-
-</div>
-
-
-<div id="preview" class="card preview">
-
-  <h2>🎥 Video Preview</h2>
-
-  <canvas id="canvas"></canvas>
-
-  <div class="progress">
-    <div id="progressBar" class="progressbar"></div>
-  </div>
-
-  <div id="videoStatus" class="status"></div>
-
-  <button id="downloadBtn" class="download">
-    ⬇️ Unduh Video
-  </button>
-
+<div>
+<label>Format Video</label>
+<select id="aspect">
+<option value="16:9 cinematic">16:9 Cinematic YouTube</option>
+<option value="9:16 vertical">9:16 Shorts / TikTok</option>
+</select>
 </div>
 
 </div>
 
+<label>Lirik / Cerita Lagu</label>
+<textarea id="lyrics" placeholder="Tempel lirik lagu di sini..."></textarea>
+
+<br><br>
+
+<button id="generateBtn" onclick="generateFilm()">
+🎬 Buat Storyboard AI
+</button>
+
+<div id="status" class="status">
+Siap membuat storyboard film dari lagu.
+</div>
+
+</div>
+
+<div id="result"></div>
+
+</div>
 
 <script>
 
-let audioURL = null;
-let audioElement = null;
-let scenes = [];
-let mediaRecorder = null;
-let recordedChunks = [];
+async function generateFilm(){
 
-const audioFile = document.getElementById("audioFile");
+  const title = document.getElementById("title").value.trim();
+  const artist = document.getElementById("artist").value.trim();
+  const lyrics = document.getElementById("lyrics").value.trim();
+  const duration = document.getElementById("duration").value;
+  const aspect = document.getElementById("aspect").value;
 
-audioFile.addEventListener("change", function(){
+  const button = document.getElementById("generateBtn");
+  const status = document.getElementById("status");
+  const result = document.getElementById("result");
 
-  if(this.files.length){
+  if(!title || !lyrics){
 
-    document.getElementById("fileName").textContent =
-      "🎵 " + this.files[0].name;
+    status.innerHTML =
+      '<span class="error">Masukkan judul lagu dan lirik terlebih dahulu.</span>';
 
-    if(audioURL){
-      URL.revokeObjectURL(audioURL);
-    }
-
-    audioURL = URL.createObjectURL(this.files[0]);
+    return;
   }
 
-});
+  button.disabled = true;
+  status.innerHTML = "⏳ Gemini sedang memahami cerita lagu...";
+  result.innerHTML = "";
 
+  const prompt = `
+You are an expert cinematic music video director.
 
-function splitLyrics(text){
+Create a complete AI music film storyboard from the song information below.
 
-  let lines = text
-    .split(/\n+/)
-    .map(x => x.trim())
-    .filter(x => x.length > 0);
+IMPORTANT:
+- The film duration must be ${duration}.
+- Create exactly 24 cinematic scenes.
+- Maintain ONE consistent main character throughout the entire film.
+- Character appearance must remain consistent from scene to scene.
+- The scenes must follow the emotional story of the lyrics.
+- The story should have a clear beginning, development, climax and ending.
+- Do not create random unrelated scenes.
+- Do not change the main character's age, gender or appearance.
+- Every scene must visually connect to the previous scene.
+- The soundtrack is the uploaded song.
+- Video format: ${aspect}.
+- Visual style should be cinematic, emotional and suitable for a professional music video.
+- No text, subtitles or logos inside the generated scenes.
 
-  let result = [];
-  let currentSection = "INTRO";
+Return ONLY valid JSON.
 
-  for(let line of lines){
+JSON structure:
 
-    if(
-      line.match(/^\[(.*?)\]/)
-    ){
-
-      currentSection =
-        line.replace("[","")
-            .replace("]","")
-            .toUpperCase();
-
-      continue;
+{
+  "film_title": "",
+  "logline": "",
+  "main_character": {
+    "name": "",
+    "gender": "",
+    "age": "",
+    "appearance": "",
+    "hair": "",
+    "clothing": "",
+    "personality": ""
+  },
+  "visual_style": "",
+  "color_mood": "",
+  "scenes": [
+    {
+      "scene": 1,
+      "time": "",
+      "story": "",
+      "visual": "",
+      "camera": "",
+      "lighting": "",
+      "emotion": "",
+      "video_prompt": ""
     }
+  ]
+}
 
-    result.push({
-      section: currentSection,
-      text: line
+SONG TITLE:
+${title}
+
+ARTIST:
+${artist}
+
+LYRICS:
+${lyrics}
+`;
+
+  try{
+
+    const response = await fetch("/api/generate",{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json"
+      },
+      body:JSON.stringify({
+        prompt:prompt
+      })
     });
 
+    const data = await response.json();
+
+    if(!response.ok){
+
+      throw new Error(
+        typeof data.error === "string"
+        ? data.error
+        : "Gemini gagal memproses permintaan."
+      );
+
+    }
+
+    let text = data.text || "";
+
+    text = text
+      .replace(/```json/gi,"")
+      .replace(/```/g,"")
+      .trim();
+
+    const film = JSON.parse(text);
+
+    displayFilm(film);
+
+    status.innerHTML =
+      '<span class="success">✅ Storyboard berhasil dibuat oleh Gemini.</span>';
+
+  }catch(error){
+
+    console.error(error);
+
+    status.innerHTML =
+      '<span class="error">❌ Gagal: ' +
+      escapeHtml(error.message) +
+      '</span>';
+
+  }finally{
+
+    button.disabled = false;
+
   }
 
-  return result;
 }
 
+function displayFilm(film){
 
-function visualPrompt(section, text, theme){
+  const result = document.getElementById("result");
 
-  let base = "";
+  let html = "";
 
-  if(theme === "dark"){
-    base =
-      "dark cinematic atmosphere, mysterious night, dramatic shadows";
-  }
+  html += `
+  <div class="card">
 
-  if(theme === "gothic"){
-    base =
-      "gothic romantic atmosphere, ancient cathedral, moonlight, black roses";
-  }
+    <h2>🎬 ${escapeHtml(film.film_title || "")}</h2>
 
-  if(theme === "metal"){
-    base =
-      "epic symphonic metal atmosphere, dark orchestra, dramatic storm, powerful cinematic lighting";
-  }
+    <p>${escapeHtml(film.logline || "")}</p>
 
-  if(theme === "fantasy"){
-    base =
-      "dark fantasy world, mysterious castle, mist, moonlight, supernatural atmosphere";
-  }
+    <h3>🎭 Karakter Utama</h3>
 
-  if(theme === "sad"){
-    base =
-      "emotional cinematic atmosphere, lonely character, rain, melancholy, soft dramatic lighting";
-  }
+    <div class="character">
+      <b>Nama:</b> ${escapeHtml(film.main_character?.name || "")}<br>
+      <b>Gender:</b> ${escapeHtml(film.main_character?.gender || "")}<br>
+      <b>Usia:</b> ${escapeHtml(film.main_character?.age || "")}<br>
+      <b>Penampilan:</b> ${escapeHtml(film.main_character?.appearance || "")}<br>
+      <b>Rambut:</b> ${escapeHtml(film.main_character?.hair || "")}<br>
+      <b>Pakaian:</b> ${escapeHtml(film.main_character?.clothing || "")}<br>
+      <b>Kepribadian:</b> ${escapeHtml(film.main_character?.personality || "")}
+    </div>
 
-  if(theme === "night"){
-    base =
-      "dreamlike midnight atmosphere, deep blue night, stars, moonlight, cinematic composition";
-  }
+    <h3>🎨 Gaya Visual</h3>
+    <p>${escapeHtml(film.visual_style || "")}</p>
 
-  return base +
-    ", inspired by the emotion of: \"" +
-    text +
-    "\"";
-}
+    <h3>🌙 Mood Warna</h3>
+    <p>${escapeHtml(film.color_mood || "")}</p>
 
+  </div>
+  `;
 
-function createStoryboard(){
+  html += `<div class="card"><h2>🎞️ 24 Cinematic Scenes</h2>`;
 
-  const title =
-    document.getElementById("title").value.trim();
+  (film.scenes || []).forEach(scene => {
 
-  const lyrics =
-    document.getElementById("lyrics").value.trim();
+    html += `
+    <div class="scene">
 
-  const theme =
-    document.getElementById("theme").value;
-
-  if(!title){
-    alert("Masukkan judul lagu terlebih dahulu.");
-    return;
-  }
-
-  if(!lyrics){
-    alert("Masukkan lirik lagu terlebih dahulu.");
-    return;
-  }
-
-  scenes = splitLyrics(lyrics);
-
-  if(!scenes.length){
-    alert("Lirik belum terbaca.");
-    return;
-  }
-
-  const sceneList =
-    document.getElementById("sceneList");
-
-  sceneList.innerHTML = "";
-
-  scenes.forEach((scene,index)=>{
-
-    const div =
-      document.createElement("div");
-
-    div.className = "scene";
-
-    div.innerHTML = `
       <div class="scene-number">
-        SCENE ${index+1} • ${scene.section}
+        SCENE ${escapeHtml(String(scene.scene || ""))}
       </div>
 
-      <h3>${escapeHTML(scene.text)}</h3>
+      <h3>${escapeHtml(scene.time || "")}</h3>
 
       <p>
-        <b>Visual:</b>
-        ${escapeHTML(
-          visualPrompt(
-            scene.section,
-            scene.text,
-            theme
-          )
-        )}
+        <b>Story:</b><br>
+        ${escapeHtml(scene.story || "")}
       </p>
+
+      <p>
+        <b>Visual:</b><br>
+        ${escapeHtml(scene.visual || "")}
+      </p>
+
+      <p>
+        <b>Camera:</b><br>
+        ${escapeHtml(scene.camera || "")}
+      </p>
+
+      <p>
+        <b>Lighting:</b><br>
+        ${escapeHtml(scene.lighting || "")}
+      </p>
+
+      <p>
+        <b>Emotion:</b><br>
+        ${escapeHtml(scene.emotion || "")}
+      </p>
+
+      <p class="prompt">
+        <b>AI Video Prompt:</b><br>
+        ${escapeHtml(scene.video_prompt || "")}
+      </p>
+
+    </div>
     `;
 
-    sceneList.appendChild(div);
-
   });
 
-  document.getElementById("story")
-    .style.display = "block";
+  html += `</div>`;
 
-  document.getElementById("status")
-    .textContent =
-      scenes.length +
-      " scene berhasil dibuat.";
-
-  window.scrollTo({
-    top:document.getElementById("story").offsetTop,
-    behavior:"smooth"
-  });
-
+  result.innerHTML = html;
 }
 
+function escapeHtml(value){
 
-function escapeHTML(str){
-
-  return str
+  return String(value)
     .replace(/&/g,"&amp;")
     .replace(/</g,"&lt;")
     .replace(/>/g,"&gt;")
     .replace(/"/g,"&quot;")
     .replace(/'/g,"&#039;");
-
-}
-
-
-function getCanvasSize(){
-
-  const ratio =
-    document.getElementById("ratio").value;
-
-  if(ratio === "9:16"){
-    return {
-      width:720,
-      height:1280
-    };
-  }
-
-  if(ratio === "1:1"){
-    return {
-      width:1080,
-      height:1080
-    };
-  }
-
-  return {
-    width:1280,
-    height:720
-  };
-
-}
-
-
-function drawScene(ctx,width,height,scene,index,total,time){
-
-  const themes = {
-
-    dark:[
-      "#050509",
-      "#191929"
-    ],
-
-    gothic:[
-      "#09030d",
-      "#35142d"
-    ],
-
-    metal:[
-      "#050505",
-      "#272727"
-    ],
-
-    fantasy:[
-      "#060914",
-      "#182044"
-    ],
-
-    sad:[
-      "#071019",
-      "#263746"
-    ],
-
-    night:[
-      "#030713",
-      "#101b39"
-    ]
-
-  };
-
-  const theme =
-    document.getElementById("theme").value;
-
-  const colors =
-    themes[theme] || themes.dark;
-
-  const gradient =
-    ctx.createLinearGradient(
-      0,0,width,height
-    );
-
-  gradient.addColorStop(0,colors[0]);
-  gradient.addColorStop(1,colors[1]);
-
-  ctx.fillStyle = gradient;
-  ctx.fillRect(0,0,width,height);
-
-  // moving cinematic light
-
-  const x =
-    width/2 +
-    Math.sin(time * 0.0004 + index) *
-    width * 0.3;
-
-  const y =
-    height/2 +
-    Math.cos(time * 0.0003 + index) *
-    height * 0.2;
-
-  const glow =
-    ctx.createRadialGradient(
-      x,y,0,
-      x,y,width*.45
-    );
-
-  glow.addColorStop(
-    0,
-    "rgba(150,150,255,.18)"
-  );
-
-  glow.addColorStop(
-    1,
-    "rgba(0,0,0,0)"
-  );
-
-  ctx.fillStyle = glow;
-  ctx.fillRect(0,0,width,height);
-
-
-  // moon
-
-  ctx.beginPath();
-
-  ctx.arc(
-    width*.78,
-    height*.22,
-    Math.min(width,height)*.08,
-    0,
-    Math.PI*2
-  );
-
-  ctx.fillStyle =
-    "rgba(235,235,255,.85)";
-
-  ctx.fill();
-
-
-  // cinematic particles
-
-  for(let i=0;i<45;i++){
-
-    const px =
-      (i*97 + time*.015) % width;
-
-    const py =
-      (i*53) % height;
-
-    ctx.beginPath();
-
-    ctx.arc(
-      px,
-      py,
-      1.5,
-      0,
-      Math.PI*2
-    );
-
-    ctx.fillStyle =
-      "rgba(255,255,255,.25)";
-
-    ctx.fill();
-
-  }
-
-
-  // vignette
-
-  const vignette =
-    ctx.createRadialGradient(
-      width/2,
-      height/2,
-      height*.1,
-      width/2,
-      height/2,
-      height*.8
-    );
-
-  vignette.addColorStop(
-    0,
-    "rgba(0,0,0,0)"
-  );
-
-  vignette.addColorStop(
-    1,
-    "rgba(0,0,0,.75)"
-  );
-
-  ctx.fillStyle = vignette;
-  ctx.fillRect(0,0,width,height);
-
-
-  // text
-
-  ctx.textAlign = "center";
-
-  const title =
-    document.getElementById("title").value;
-
-  ctx.font =
-    `bold ${Math.max(26,width*.035)}px Arial`;
-
-  ctx.fillStyle =
-    "rgba(255,255,255,.92)";
-
-  ctx.fillText(
-    title,
-    width/2,
-    height*.78
-  );
-
-
-  ctx.font =
-    `${Math.max(18,width*.022)}px Arial`;
-
-  ctx.fillStyle =
-    "rgba(255,255,255,.72)";
-
-  let lyric =
-    scene.text;
-
-  if(lyric.length > 80){
-    lyric =
-      lyric.substring(0,80) + "...";
-  }
-
-  ctx.fillText(
-    lyric,
-    width/2,
-    height*.84
-  );
-
-
-  ctx.font =
-    `${Math.max(13,width*.012)}px Arial`;
-
-  ctx.fillStyle =
-    "rgba(255,255,255,.45)";
-
-  ctx.fillText(
-    `${index+1} / ${total}`,
-    width/2,
-    height*.91
-  );
-
-}
-
-
-async function generateVideo(){
-
-  if(!scenes.length){
-    alert("Buat storyboard terlebih dahulu.");
-    return;
-  }
-
-  const size =
-    getCanvasSize();
-
-  const canvas =
-    document.getElementById("canvas");
-
-  canvas.width =
-    size.width;
-
-  canvas.height =
-    size.height;
-
-  document.getElementById("preview")
-    .style.display = "block";
-
-  window.scrollTo({
-    top:document.getElementById("preview").offsetTop,
-    behavior:"smooth"
-  });
-
-  const ctx =
-    canvas.getContext("2d");
-
-  recordedChunks = [];
-
-  const stream =
-    canvas.captureStream(30);
-
-
-  /*
-    Jika lagu tersedia, kita coba
-    memasukkan audio ke dalam video.
-  */
-
-  let audioContext = null;
-  let audioDestination = null;
-  let audioSource = null;
-
-  if(audioURL){
-
-    try{
-
-      audioElement =
-        new Audio(audioURL);
-
-      audioElement.crossOrigin = "anonymous";
-
-      audioElement.volume = 1;
-
-      audioContext =
-        new AudioContext();
-
-      audioSource =
-        audioContext.createMediaElementSource(
-          audioElement
-        );
-
-      audioDestination =
-        audioContext.createMediaStreamDestination();
-
-      audioSource.connect(
-        audioDestination
-      );
-
-      audioSource.connect(
-        audioContext.destination
-      );
-
-      audioDestination.stream
-        .getAudioTracks()
-        .forEach(track=>{
-          stream.addTrack(track);
-        });
-
-    }catch(error){
-
-      console.log(
-        "Audio stream tidak tersedia:",
-        error
-      );
-
-    }
-
-  }
-
-
-  let mime =
-    "video/webm;codecs=vp9";
-
-  if(!MediaRecorder.isTypeSupported(mime)){
-    mime = "video/webm";
-  }
-
-  mediaRecorder =
-    new MediaRecorder(
-      stream,
-      {
-        mimeType:mime,
-        videoBitsPerSecond:6000000
-      }
-    );
-
-
-  mediaRecorder.ondataavailable =
-    function(event){
-
-      if(event.data.size > 0){
-        recordedChunks.push(event.data);
-      }
-
-    };
-
-
-  mediaRecorder.onstop =
-    function(){
-
-      const blob =
-        new Blob(
-          recordedChunks,
-          {
-            type:"video/webm"
-          }
-        );
-
-      const url =
-        URL.createObjectURL(blob);
-
-      const download =
-        document.getElementById("downloadBtn");
-
-      download.style.display =
-        "block";
-
-      download.onclick =
-        function(){
-
-          const a =
-            document.createElement("a");
-
-          a.href = url;
-
-          const title =
-            document.getElementById("title")
-              .value
-              .trim()
-              .replace(/\s+/g,"-");
-
-          a.download =
-            (title || "song-to-video") +
-            "-AI-video.webm";
-
-          a.click();
-
-        };
-
-      document.getElementById(
-        "videoStatus"
-      ).textContent =
-        "✅ Video selesai dibuat. Silakan unduh.";
-
-    };
-
-
-  mediaRecorder.start();
-
-  if(audioElement){
-
-    try{
-
-      await audioContext.resume();
-
-      await audioElement.play();
-
-    }catch(e){
-
-      console.log(e);
-
-    }
-
-  }
-
-
-  const sceneDuration = 5000;
-
-  const totalDuration =
-    scenes.length *
-    sceneDuration;
-
-  const start =
-    performance.now();
-
-
-  function animate(now){
-
-    const elapsed =
-      now - start;
-
-    const sceneIndex =
-      Math.min(
-        Math.floor(
-          elapsed / sceneDuration
-        ),
-        scenes.length-1
-      );
-
-    drawScene(
-      ctx,
-      size.width,
-      size.height,
-      scenes[sceneIndex],
-      sceneIndex,
-      scenes.length,
-      now
-    );
-
-
-    const progress =
-      Math.min(
-        elapsed / totalDuration,
-        1
-      ) * 100;
-
-    document.getElementById(
-      "progressBar"
-    ).style.width =
-      progress + "%";
-
-
-    document.getElementById(
-      "videoStatus"
-    ).textContent =
-      "🎬 Membuat video... " +
-      Math.round(progress) +
-      "%";
-
-
-    if(elapsed < totalDuration){
-
-      requestAnimationFrame(animate);
-
-    }else{
-
-      mediaRecorder.stop();
-
-      if(audioElement){
-
-        try{
-          audioElement.pause();
-        }catch(e){}
-
-      }
-
-      if(audioContext){
-
-        try{
-          audioContext.close();
-        }catch(e){}
-
-      }
-
-    }
-
-  }
-
-  requestAnimationFrame(animate);
 
 }
 
