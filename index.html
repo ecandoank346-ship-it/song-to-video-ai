@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Song To Video AI</title>
+
+<style>
+*{
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  background:#08080d;
+  color:#fff;
+  font-family:Arial,Helvetica,sans-serif;
+}
+
+.container{
+  width:min(1000px,94%);
+  margin:30px auto;
+}
+
+header{
+  text-align:center;
+  margin-bottom:28px;
+}
+
+header h1{
+  margin:0;
+  font-size:34px;
+  letter-spacing:1px;
+}
+
+header p{
+  color:#999;
+  margin-top:8px;
+}
+
+.card{
+  background:#111119;
+  border:1px solid #292936;
+  border-radius:18px;
+  padding:22px;
+  margin-bottom:20px;
+  box-shadow:0 10px 35px rgba(0,0,0,.25);
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+}
+
+label{
+  display:block;
+  color:#c9c9d3;
+  margin-bottom:7px;
+  font-size:14px;
+}
+
+input,
+textarea,
+select{
+  width:100%;
+  background:#191923;
+  color:white;
+  border:1px solid #343442;
+  border-radius:12px;
+  padding:13px;
+  outline:none;
+  font-size:15px;
+}
+
+input:focus,
+textarea:focus,
+select:focus{
+  border-color:#7777ff;
+}
+
+textarea{
+  min-height:220px;
+  resize:vertical;
+  line-height:1.6;
+}
+
+.full{
+  grid-column:1/-1;
+}
+
+.filebox{
+  border:1px dashed #555568;
+  border-radius:14px;
+  padding:18px;
+  text-align:center;
+  background:#15151e;
+}
+
+button{
+  border:0;
+  border-radius:13px;
+  padding:14px 20px;
+  font-size:15px;
+  font-weight:bold;
+  cursor:pointer;
+  transition:.2s;
+}
+
+button:hover{
+  transform:translateY(-1px);
+  filter:brightness(1.12);
+}
+
+.primary{
+  width:100%;
+  background:white;
+  color:#09090d;
+  font-size:17px;
+  margin-top:18px;
+}
+
+.secondary{
+  background:#272733;
+  color:white;
+}
+
+.download{
+  background:#e7e7ff;
+  color:#101018;
+  width:100%;
+  margin-top:15px;
+  display:none;
+}
+
+.status{
+  text-align:center;
+  color:#aaa;
+  min-height:24px;
+  margin-top:14px;
+}
+
+.story{
+  display:none;
+}
+
+.scene{
+  background:#0c0c13;
+  border:1px solid #292936;
+  border-radius:14px;
+  padding:17px;
+  margin-bottom:12px;
+}
+
+.scene-number{
+  color:#8585ff;
+  font-size:12px;
+  font-weight:bold;
+  letter-spacing:1px;
+}
+
+.scene h3{
+  margin:8px 0;
+}
+
+.scene p{
+  color:#aaa;
+  line-height:1.5;
+  margin:6px 0;
+}
+
+.preview{
+  display:none;
+  text-align:center;
+}
+
+canvas{
+  max-width:100%;
+  background:#000;
+  border-radius:14px;
+  border:1px solid #333;
+}
+
+.progress{
+  height:8px;
+  background:#22222d;
+  border-radius:20px;
+  overflow:hidden;
+  margin-top:15px;
+}
+
+.progressbar{
+  height:100%;
+  width:0%;
+  background:white;
+  transition:width .1s linear;
+}
+
+.small{
+  color:#777;
+  font-size:12px;
+  margin-top:10px;
+}
+
+@media(max-width:700px){
+  .grid{
+    grid-template-columns:1fr;
+  }
+
+  header h1{
+    font-size:27px;
+  }
+
+  .full{
+    grid-column:auto;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<header>
+  <h1>🎬 Song To Video AI</h1>
+  <p>Generate cinematic music videos from your song and lyrics</p>
+</header>
+
+<div class="card">
+
+  <div class="grid">
+
+    <div>
+      <label>Judul Lagu</label>
+      <input id="title" placeholder="Contoh: When The Moon Forgot Her">
+    </div>
+
+    <div>
+      <label>Artis</label>
+      <input id="artist" placeholder="Contoh: Dark Cathedral">
+    </div>
+
+    <div class="full">
+      <label>🎵 Upload Lagu</label>
+
+      <div class="filebox">
+        <input id="audioFile" type="file" accept="audio/*">
+        <div id="fileName" class="small">
+          Pilih file MP3 atau WAV
+        </div>
+      </div>
+    </div>
+
+    <div class="full">
+      <label>📝 Lirik / Cerita Lagu</label>
+
+      <textarea id="lyrics" placeholder="Masukkan lirik lagu di sini...
+
+Contoh:
+
+[Verse 1]
+She walked beneath the dying stars...
+
+[Chorus]
+When the moon forgot her...
+
+[Verse 2]
+She called his name into the rain...
+
+[Outro]
+The moon may forget her name..."></textarea>
+    </div>
+
+    <div>
+      <label>🎨 Tema Visual</label>
+
+      <select id="theme">
+        <option value="dark">Dark Cinematic</option>
+        <option value="gothic">Gothic Romance</option>
+        <option value="metal">Symphonic Metal</option>
+        <option value="fantasy">Dark Fantasy</option>
+        <option value="sad">Emotional Sad</option>
+        <option value="night">Midnight Dream</option>
+      </select>
+    </div>
+
+    <div>
+      <label>📐 Rasio Video</label>
+
+      <select id="ratio">
+        <option value="16:9">16:9 — YouTube</option>
+        <option value="9:16">9:16 — Shorts / TikTok</option>
+        <option value="1:1">1:1 — Square</option>
+      </select>
+    </div>
+
+  </div>
+
+  <button class="primary" onclick="createStoryboard()">
+    ✨ Buat Storyboard
+  </button>
+
+  <div id="status" class="status"></div>
+
+</div>
+
+
+<div id="story" class="card story">
+
+  <h2>🎞️ Storyboard</h2>
+
+  <div id="sceneList"></div>
+
+  <button class="primary" onclick="generateVideo()">
+    🎬 Generate Video
+  </button>
+
+</div>
+
+
+<div id="preview" class="card preview">
+
+  <h2>🎥 Video Preview</h2>
+
+  <canvas id="canvas"></canvas>
+
+  <div class="progress">
+    <div id="progressBar" class="progressbar"></div>
+  </div>
+
+  <div id="videoStatus" class="status"></div>
+
+  <button id="downloadBtn" class="download">
+    ⬇️ Unduh Video
+  </button>
+
+</div>
+
+</div>
+
+
+<script>
+
+let audioURL = null;
+let audioElement = null;
+let scenes = [];
+let mediaRecorder = null;
+let recordedChunks = [];
+
+const audioFile = document.getElementById("audioFile");
+
+audioFile.addEventListener("change", function(){
+
+  if(this.files.length){
+
+    document.getElementById("fileName").textContent =
+      "🎵 " + this.files[0].name;
+
+    if(audioURL){
+      URL.revokeObjectURL(audioURL);
+    }
+
+    audioURL = URL.createObjectURL(this.files[0]);
+  }
+
+});
+
+
+function splitLyrics(text){
+
+  let lines = text
+    .split(/\n+/)
+    .map(x => x.trim())
+    .filter(x => x.length > 0);
+
+  let result = [];
+  let currentSection = "INTRO";
+
+  for(let line of lines){
+
+    if(
+      line.match(/^\[(.*?)\]/)
+    ){
+
+      currentSection =
+        line.replace("[","")
+            .replace("]","")
+            .toUpperCase();
+
+      continue;
+    }
+
+    result.push({
+      section: currentSection,
+      text: line
+    });
+
+  }
+
+  return result;
+}
+
+
+function visualPrompt(section, text, theme){
+
+  let base = "";
+
+  if(theme === "dark"){
+    base =
+      "dark cinematic atmosphere, mysterious night, dramatic shadows";
+  }
+
+  if(theme === "gothic"){
+    base =
+      "gothic romantic atmosphere, ancient cathedral, moonlight, black roses";
+  }
+
+  if(theme === "metal"){
+    base =
+      "epic symphonic metal atmosphere, dark orchestra, dramatic storm, powerful cinematic lighting";
+  }
+
+  if(theme === "fantasy"){
+    base =
+      "dark fantasy world, mysterious castle, mist, moonlight, supernatural atmosphere";
+  }
+
+  if(theme === "sad"){
+    base =
+      "emotional cinematic atmosphere, lonely character, rain, melancholy, soft dramatic lighting";
+  }
+
+  if(theme === "night"){
+    base =
+      "dreamlike midnight atmosphere, deep blue night, stars, moonlight, cinematic composition";
+  }
+
+  return base +
+    ", inspired by the emotion of: \"" +
+    text +
+    "\"";
+}
+
+
+function createStoryboard(){
+
+  const title =
+    document.getElementById("title").value.trim();
+
+  const lyrics =
+    document.getElementById("lyrics").value.trim();
+
+  const theme =
+    document.getElementById("theme").value;
+
+  if(!title){
+    alert("Masukkan judul lagu terlebih dahulu.");
+    return;
+  }
+
+  if(!lyrics){
+    alert("Masukkan lirik lagu terlebih dahulu.");
+    return;
+  }
+
+  scenes = splitLyrics(lyrics);
+
+  if(!scenes.length){
+    alert("Lirik belum terbaca.");
+    return;
+  }
+
+  const sceneList =
+    document.getElementById("sceneList");
+
+  sceneList.innerHTML = "";
+
+  scenes.forEach((scene,index)=>{
+
+    const div =
+      document.createElement("div");
+
+    div.className = "scene";
+
+    div.innerHTML = `
+      <div class="scene-number">
+        SCENE ${index+1} • ${scene.section}
+      </div>
+
+      <h3>${escapeHTML(scene.text)}</h3>
+
+      <p>
+        <b>Visual:</b>
+        ${escapeHTML(
+          visualPrompt(
+            scene.section,
+            scene.text,
+            theme
+          )
+        )}
+      </p>
+    `;
+
+    sceneList.appendChild(div);
+
+  });
+
+  document.getElementById("story")
+    .style.display = "block";
+
+  document.getElementById("status")
+    .textContent =
+      scenes.length +
+      " scene berhasil dibuat.";
+
+  window.scrollTo({
+    top:document.getElementById("story").offsetTop,
+    behavior:"smooth"
+  });
+
+}
+
+
+function escapeHTML(str){
+
+  return str
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+
+}
+
+
+function getCanvasSize(){
+
+  const ratio =
+    document.getElementById("ratio").value;
+
+  if(ratio === "9:16"){
+    return {
+      width:720,
+      height:1280
+    };
+  }
+
+  if(ratio === "1:1"){
+    return {
+      width:1080,
+      height:1080
+    };
+  }
+
+  return {
+    width:1280,
+    height:720
+  };
+
+}
+
+
+function drawScene(ctx,width,height,scene,index,total,time){
+
+  const themes = {
+
+    dark:[
+      "#050509",
+      "#191929"
+    ],
+
+    gothic:[
+      "#09030d",
+      "#35142d"
+    ],
+
+    metal:[
+      "#050505",
+      "#272727"
+    ],
+
+    fantasy:[
+      "#060914",
+      "#182044"
+    ],
+
+    sad:[
+      "#071019",
+      "#263746"
+    ],
+
+    night:[
+      "#030713",
+      "#101b39"
+    ]
+
+  };
+
+  const theme =
+    document.getElementById("theme").value;
+
+  const colors =
+    themes[theme] || themes.dark;
+
+  const gradient =
+    ctx.createLinearGradient(
+      0,0,width,height
+    );
+
+  gradient.addColorStop(0,colors[0]);
+  gradient.addColorStop(1,colors[1]);
+
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0,0,width,height);
+
+  // moving cinematic light
+
+  const x =
+    width/2 +
+    Math.sin(time * 0.0004 + index) *
+    width * 0.3;
+
+  const y =
+    height/2 +
+    Math.cos(time * 0.0003 + index) *
+    height * 0.2;
+
+  const glow =
+    ctx.createRadialGradient(
+      x,y,0,
+      x,y,width*.45
+    );
+
+  glow.addColorStop(
+    0,
+    "rgba(150,150,255,.18)"
+  );
+
+  glow.addColorStop(
+    1,
+    "rgba(0,0,0,0)"
+  );
+
+  ctx.fillStyle = glow;
+  ctx.fillRect(0,0,width,height);
+
+
+  // moon
+
+  ctx.beginPath();
+
+  ctx.arc(
+    width*.78,
+    height*.22,
+    Math.min(width,height)*.08,
+    0,
+    Math.PI*2
+  );
+
+  ctx.fillStyle =
+    "rgba(235,235,255,.85)";
+
+  ctx.fill();
+
+
+  // cinematic particles
+
+  for(let i=0;i<45;i++){
+
+    const px =
+      (i*97 + time*.015) % width;
+
+    const py =
+      (i*53) % height;
+
+    ctx.beginPath();
+
+    ctx.arc(
+      px,
+      py,
+      1.5,
+      0,
+      Math.PI*2
+    );
+
+    ctx.fillStyle =
+      "rgba(255,255,255,.25)";
+
+    ctx.fill();
+
+  }
+
+
+  // vignette
+
+  const vignette =
+    ctx.createRadialGradient(
+      width/2,
+      height/2,
+      height*.1,
+      width/2,
+      height/2,
+      height*.8
+    );
+
+  vignette.addColorStop(
+    0,
+    "rgba(0,0,0,0)"
+  );
+
+  vignette.addColorStop(
+    1,
+    "rgba(0,0,0,.75)"
+  );
+
+  ctx.fillStyle = vignette;
+  ctx.fillRect(0,0,width,height);
+
+
+  // text
+
+  ctx.textAlign = "center";
+
+  const title =
+    document.getElementById("title").value;
+
+  ctx.font =
+    `bold ${Math.max(26,width*.035)}px Arial`;
+
+  ctx.fillStyle =
+    "rgba(255,255,255,.92)";
+
+  ctx.fillText(
+    title,
+    width/2,
+    height*.78
+  );
+
+
+  ctx.font =
+    `${Math.max(18,width*.022)}px Arial`;
+
+  ctx.fillStyle =
+    "rgba(255,255,255,.72)";
+
+  let lyric =
+    scene.text;
+
+  if(lyric.length > 80){
+    lyric =
+      lyric.substring(0,80) + "...";
+  }
+
+  ctx.fillText(
+    lyric,
+    width/2,
+    height*.84
+  );
+
+
+  ctx.font =
+    `${Math.max(13,width*.012)}px Arial`;
+
+  ctx.fillStyle =
+    "rgba(255,255,255,.45)";
+
+  ctx.fillText(
+    `${index+1} / ${total}`,
+    width/2,
+    height*.91
+  );
+
+}
+
+
+async function generateVideo(){
+
+  if(!scenes.length){
+    alert("Buat storyboard terlebih dahulu.");
+    return;
+  }
+
+  const size =
+    getCanvasSize();
+
+  const canvas =
+    document.getElementById("canvas");
+
+  canvas.width =
+    size.width;
+
+  canvas.height =
+    size.height;
+
+  document.getElementById("preview")
+    .style.display = "block";
+
+  window.scrollTo({
+    top:document.getElementById("preview").offsetTop,
+    behavior:"smooth"
+  });
+
+  const ctx =
+    canvas.getContext("2d");
+
+  recordedChunks = [];
+
+  const stream =
+    canvas.captureStream(30);
+
+
+  /*
+    Jika lagu tersedia, kita coba
+    memasukkan audio ke dalam video.
+  */
+
+  let audioContext = null;
+  let audioDestination = null;
+  let audioSource = null;
+
+  if(audioURL){
+
+    try{
+
+      audioElement =
+        new Audio(audioURL);
+
+      audioElement.crossOrigin = "anonymous";
+
+      audioElement.volume = 1;
+
+      audioContext =
+        new AudioContext();
+
+      audioSource =
+        audioContext.createMediaElementSource(
+          audioElement
+        );
+
+      audioDestination =
+        audioContext.createMediaStreamDestination();
+
+      audioSource.connect(
+        audioDestination
+      );
+
+      audioSource.connect(
+        audioContext.destination
+      );
+
+      audioDestination.stream
+        .getAudioTracks()
+        .forEach(track=>{
+          stream.addTrack(track);
+        });
+
+    }catch(error){
+
+      console.log(
+        "Audio stream tidak tersedia:",
+        error
+      );
+
+    }
+
+  }
+
+
+  let mime =
+    "video/webm;codecs=vp9";
+
+  if(!MediaRecorder.isTypeSupported(mime)){
+    mime = "video/webm";
+  }
+
+  mediaRecorder =
+    new MediaRecorder(
+      stream,
+      {
+        mimeType:mime,
+        videoBitsPerSecond:6000000
+      }
+    );
+
+
+  mediaRecorder.ondataavailable =
+    function(event){
+
+      if(event.data.size > 0){
+        recordedChunks.push(event.data);
+      }
+
+    };
+
+
+  mediaRecorder.onstop =
+    function(){
+
+      const blob =
+        new Blob(
+          recordedChunks,
+          {
+            type:"video/webm"
+          }
+        );
+
+      const url =
+        URL.createObjectURL(blob);
+
+      const download =
+        document.getElementById("downloadBtn");
+
+      download.style.display =
+        "block";
+
+      download.onclick =
+        function(){
+
+          const a =
+            document.createElement("a");
+
+          a.href = url;
+
+          const title =
+            document.getElementById("title")
+              .value
+              .trim()
+              .replace(/\s+/g,"-");
+
+          a.download =
+            (title || "song-to-video") +
+            "-AI-video.webm";
+
+          a.click();
+
+        };
+
+      document.getElementById(
+        "videoStatus"
+      ).textContent =
+        "✅ Video selesai dibuat. Silakan unduh.";
+
+    };
+
+
+  mediaRecorder.start();
+
+  if(audioElement){
+
+    try{
+
+      await audioContext.resume();
+
+      await audioElement.play();
+
+    }catch(e){
+
+      console.log(e);
+
+    }
+
+  }
+
+
+  const sceneDuration = 5000;
+
+  const totalDuration =
+    scenes.length *
+    sceneDuration;
+
+  const start =
+    performance.now();
+
+
+  function animate(now){
+
+    const elapsed =
+      now - start;
+
+    const sceneIndex =
+      Math.min(
+        Math.floor(
+          elapsed / sceneDuration
+        ),
+        scenes.length-1
+      );
+
+    drawScene(
+      ctx,
+      size.width,
+      size.height,
+      scenes[sceneIndex],
+      sceneIndex,
+      scenes.length,
+      now
+    );
+
+
+    const progress =
+      Math.min(
+        elapsed / totalDuration,
+        1
+      ) * 100;
+
+    document.getElementById(
+      "progressBar"
+    ).style.width =
+      progress + "%";
+
+
+    document.getElementById(
+      "videoStatus"
+    ).textContent =
+      "🎬 Membuat video... " +
+      Math.round(progress) +
+      "%";
+
+
+    if(elapsed < totalDuration){
+
+      requestAnimationFrame(animate);
+
+    }else{
+
+      mediaRecorder.stop();
+
+      if(audioElement){
+
+        try{
+          audioElement.pause();
+        }catch(e){}
+
+      }
+
+      if(audioContext){
+
+        try{
+          audioContext.close();
+        }catch(e){}
+
+      }
+
+    }
+
+  }
+
+  requestAnimationFrame(animate);
+
+}
+
+</script>
+
+</body>
+</html>
