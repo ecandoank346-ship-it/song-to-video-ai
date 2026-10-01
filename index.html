@@ -3,109 +3,156 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Song To Video AI - Music Film Generator</title>
+<title>Song To Video AI</title>
 
 <style>
 *{box-sizing:border-box}
+
 body{
   margin:0;
   font-family:Arial,sans-serif;
-  background:#0b0b10;
+  background:#09090d;
   color:#eee;
 }
+
 .container{
-  max-width:900px;
+  max-width:950px;
   margin:auto;
   padding:30px 18px 60px;
 }
-h1{text-align:center;margin-bottom:5px}
-.subtitle{text-align:center;color:#aaa;margin-bottom:30px}
+
+h1{
+  text-align:center;
+  margin-bottom:6px;
+}
+
+.subtitle{
+  text-align:center;
+  color:#999;
+  margin-bottom:30px;
+}
+
 .card{
-  background:#15151d;
-  border:1px solid #292936;
+  background:#15151c;
+  border:1px solid #292934;
   border-radius:14px;
   padding:20px;
   margin-bottom:20px;
 }
+
 label{
   display:block;
-  margin:15px 0 7px;
-  color:#ccc;
+  margin:16px 0 8px;
   font-weight:bold;
+  color:#ccc;
 }
-input,textarea,select{
+
+input,
+textarea,
+select{
   width:100%;
   padding:13px;
   border-radius:8px;
-  border:1px solid #3a3a48;
-  background:#0e0e14;
+  border:1px solid #3a3a47;
+  background:#0e0e13;
   color:white;
   font-size:15px;
 }
+
 textarea{
   min-height:260px;
   resize:vertical;
 }
+
 .row{
   display:grid;
   grid-template-columns:1fr 1fr;
   gap:15px;
 }
+
+.filebox{
+  border:1px dashed #555566;
+  border-radius:10px;
+  padding:18px;
+  background:#101017;
+}
+
+.audio-info{
+  margin-top:12px;
+  color:#aaa;
+  font-size:14px;
+}
+
+audio{
+  width:100%;
+  margin-top:12px;
+}
+
 button{
   width:100%;
   padding:15px;
   border:0;
   border-radius:9px;
-  background:#7c4dff;
+  background:#7651ff;
   color:white;
   font-size:17px;
   font-weight:bold;
   cursor:pointer;
 }
+
 button:disabled{
   opacity:.5;
   cursor:not-allowed;
 }
+
 .status{
   margin-top:15px;
-  padding:12px;
+  padding:13px;
   border-radius:8px;
-  background:#101018;
-  color:#bbb;
+  background:#101017;
+  color:#aaa;
 }
+
+.success{color:#69e6a0}
+.error{color:#ff7070}
+
 .character{
-  background:#101018;
+  background:#101017;
   padding:18px;
   border-radius:10px;
-  line-height:1.6;
+  line-height:1.7;
 }
+
 .scene{
-  background:#101018;
-  border:1px solid #292936;
+  background:#101017;
+  border:1px solid #292934;
   border-radius:10px;
-  padding:15px;
+  padding:16px;
   margin:12px 0;
 }
-.scene h3{
-  margin-top:0;
-}
+
 .scene-number{
-  color:#9b7cff;
+  color:#9d82ff;
   font-weight:bold;
 }
+
+.scene h3{
+  margin:8px 0;
+}
+
+.scene p{
+  line-height:1.55;
+}
+
 .prompt{
   color:#bbb;
   font-size:14px;
-  line-height:1.5;
 }
-.error{
-  color:#ff7777;
-}
-.success{
-  color:#72e6a1;
-}
+
 @media(max-width:650px){
-  .row{grid-template-columns:1fr}
+  .row{
+    grid-template-columns:1fr;
+  }
 }
 </style>
 </head>
@@ -115,50 +162,97 @@ button:disabled{
 <div class="container">
 
 <h1>🎬 Song To Video AI</h1>
+
 <div class="subtitle">
 AI Music Film Generator — Gemini Story & Cinematic Storyboard
 </div>
 
 <div class="card">
 
+<label>🎵 Upload Lagu</label>
+
+<div class="filebox">
+
+<input
+  id="audioFile"
+  type="file"
+  accept=".mp3,.wav,audio/mpeg,audio/wav"
+>
+
+<div id="audioInfo" class="audio-info">
+Belum ada lagu dipilih.
+</div>
+
+<audio id="audioPreview" controls style="display:none"></audio>
+
+</div>
+
 <label>Judul Lagu</label>
-<input id="title" placeholder="Contoh: When The Moon Forgot Her">
+
+<input
+  id="title"
+  placeholder="Contoh: Let Me Go"
+>
 
 <label>Artis</label>
-<input id="artist" placeholder="Contoh: Dark Cathedral">
+
+<input
+  id="artist"
+  placeholder="Contoh: Liora"
+>
 
 <div class="row">
 
 <div>
+
 <label>Durasi Film</label>
+
 <select id="duration">
 <option value="4 minutes">4 menit</option>
 <option value="4 minutes 30 seconds">4 menit 30 detik</option>
 <option value="5 minutes">5 menit</option>
 </select>
+
 </div>
 
 <div>
+
 <label>Format Video</label>
+
 <select id="aspect">
-<option value="16:9 cinematic">16:9 Cinematic YouTube</option>
-<option value="9:16 vertical">9:16 Shorts / TikTok</option>
+
+<option value="16:9 cinematic">
+16:9 Cinematic YouTube
+</option>
+
+<option value="9:16 vertical">
+9:16 Vertical / TikTok / Shorts
+</option>
+
 </select>
-</div>
 
 </div>
 
-<label>Lirik / Cerita Lagu</label>
-<textarea id="lyrics" placeholder="Tempel lirik lagu di sini..."></textarea>
+</div>
+
+<label>📝 Lirik / Cerita Lagu</label>
+
+<textarea
+id="lyrics"
+placeholder="Tempel lirik lagu di sini..."
+></textarea>
 
 <br><br>
 
-<button id="generateBtn" onclick="generateFilm()">
+<button
+id="generateBtn"
+onclick="generateFilm()"
+>
 🎬 Buat Storyboard AI
 </button>
 
 <div id="status" class="status">
-Siap membuat storyboard film dari lagu.
+Siap membuat storyboard dari lagu.
 </div>
 
 </div>
@@ -169,57 +263,213 @@ Siap membuat storyboard film dari lagu.
 
 <script>
 
+let selectedAudio = null;
+let audioDuration = 0;
+
+const audioFile =
+document.getElementById("audioFile");
+
+const audioPreview =
+document.getElementById("audioPreview");
+
+const audioInfo =
+document.getElementById("audioInfo");
+
+audioFile.addEventListener("change", function(){
+
+  const file = this.files[0];
+
+  if(!file){
+    selectedAudio = null;
+    audioInfo.textContent =
+      "Belum ada lagu dipilih.";
+    audioPreview.style.display = "none";
+    return;
+  }
+
+  selectedAudio = file;
+
+  const url = URL.createObjectURL(file);
+
+  audioPreview.src = url;
+  audioPreview.style.display = "block";
+
+  audioInfo.textContent =
+    "Memuat durasi lagu...";
+
+  audioPreview.onloadedmetadata = function(){
+
+    audioDuration = audioPreview.duration;
+
+    audioInfo.innerHTML =
+      "🎵 " + escapeHtml(file.name) +
+      " — Durasi: <b>" +
+      formatTime(audioDuration) +
+      "</b>";
+
+  };
+
+});
+
+function formatTime(seconds){
+
+  const min =
+    Math.floor(seconds / 60);
+
+  const sec =
+    Math.floor(seconds % 60)
+      .toString()
+      .padStart(2,"0");
+
+  return min + ":" + sec;
+
+}
+
 async function generateFilm(){
 
-  const title = document.getElementById("title").value.trim();
-  const artist = document.getElementById("artist").value.trim();
-  const lyrics = document.getElementById("lyrics").value.trim();
-  const duration = document.getElementById("duration").value;
-  const aspect = document.getElementById("aspect").value;
+  const title =
+    document.getElementById("title")
+      .value.trim();
 
-  const button = document.getElementById("generateBtn");
-  const status = document.getElementById("status");
-  const result = document.getElementById("result");
+  const artist =
+    document.getElementById("artist")
+      .value.trim();
 
-  if(!title || !lyrics){
+  const lyrics =
+    document.getElementById("lyrics")
+      .value.trim();
+
+  const duration =
+    document.getElementById("duration")
+      .value;
+
+  const aspect =
+    document.getElementById("aspect")
+      .value;
+
+  const button =
+    document.getElementById("generateBtn");
+
+  const status =
+    document.getElementById("status");
+
+  const result =
+    document.getElementById("result");
+
+  if(!selectedAudio){
 
     status.innerHTML =
-      '<span class="error">Masukkan judul lagu dan lirik terlebih dahulu.</span>';
+      '<span class="error">❌ Pilih file MP3 atau WAV terlebih dahulu.</span>';
+
+    return;
+  }
+
+  if(!title){
+
+    status.innerHTML =
+      '<span class="error">❌ Masukkan judul lagu.</span>';
+
+    return;
+  }
+
+  if(!lyrics){
+
+    status.innerHTML =
+      '<span class="error">❌ Masukkan lirik lagu.</span>';
 
     return;
   }
 
   button.disabled = true;
-  status.innerHTML = "⏳ Gemini sedang memahami cerita lagu...";
+
+  status.innerHTML =
+    "⏳ Gemini sedang memahami cerita lagu...";
+
   result.innerHTML = "";
 
   const prompt = `
+
 You are an expert cinematic music video director.
 
-Create a complete AI music film storyboard from the song information below.
+Create a professional AI music film storyboard based on the song below.
 
-IMPORTANT:
-- The film duration must be ${duration}.
-- Create exactly 24 cinematic scenes.
-- Maintain ONE consistent main character throughout the entire film.
-- Character appearance must remain consistent from scene to scene.
-- The scenes must follow the emotional story of the lyrics.
-- The story should have a clear beginning, development, climax and ending.
-- Do not create random unrelated scenes.
-- Do not change the main character's age, gender or appearance.
-- Every scene must visually connect to the previous scene.
-- The soundtrack is the uploaded song.
-- Video format: ${aspect}.
-- Visual style should be cinematic, emotional and suitable for a professional music video.
-- No text, subtitles or logos inside the generated scenes.
+SONG TITLE:
+${title}
 
-Return ONLY valid JSON.
+ARTIST:
+${artist || "Unknown"}
 
-JSON structure:
+SONG FILE:
+${selectedAudio.name}
+
+SONG DURATION:
+${formatTime(audioDuration)}
+
+REQUESTED FILM DURATION:
+${duration}
+
+VIDEO FORMAT:
+${aspect}
+
+LYRICS:
+${lyrics}
+
+IMPORTANT CREATIVE RULES:
+
+1. Create exactly 24 cinematic scenes.
+
+2. The story must follow the meaning and emotional progression of the lyrics.
+
+3. Create ONE main character.
+
+4. The main character must remain visually consistent throughout every scene.
+
+5. Keep the same:
+- gender
+- approximate age
+- face
+- hairstyle
+- body type
+- clothing identity
+- overall appearance
+
+6. Create a clear cinematic structure:
+- opening
+- introduction
+- emotional development
+- conflict
+- climax
+- resolution
+- ending
+
+7. Every scene must connect naturally with the previous scene.
+
+8. Do not create random unrelated visuals.
+
+9. Make the video feel like a professional music film.
+
+10. Use cinematic camera movement, lighting, atmosphere and emotional acting.
+
+11. No subtitles.
+
+12. No text inside the generated video.
+
+13. No logos or watermarks.
+
+14. Each scene should contain a detailed AI video generation prompt.
+
+15. Keep the visual identity of the main character consistent in every prompt.
+
+16. The soundtrack is the original uploaded song.
+
+RETURN ONLY VALID JSON.
+
+Use exactly this structure:
 
 {
   "film_title": "",
   "logline": "",
+
   "main_character": {
     "name": "",
     "gender": "",
@@ -229,8 +479,10 @@ JSON structure:
     "clothing": "",
     "personality": ""
   },
+
   "visual_style": "",
   "color_mood": "",
+
   "scenes": [
     {
       "scene": 1,
@@ -245,29 +497,27 @@ JSON structure:
   ]
 }
 
-SONG TITLE:
-${title}
-
-ARTIST:
-${artist}
-
-LYRICS:
-${lyrics}
 `;
 
   try{
 
-    const response = await fetch("/api/generate",{
-      method:"POST",
-      headers:{
-        "Content-Type":"application/json"
-      },
-      body:JSON.stringify({
-        prompt:prompt
-      })
-    });
+    const response =
+      await fetch("/api/generate",{
 
-    const data = await response.json();
+        method:"POST",
+
+        headers:{
+          "Content-Type":"application/json"
+        },
+
+        body:JSON.stringify({
+          prompt:prompt
+        })
+
+      });
+
+    const data =
+      await response.json();
 
     if(!response.ok){
 
@@ -279,19 +529,22 @@ ${lyrics}
 
     }
 
-    let text = data.text || "";
+    let text =
+      data.text || "";
 
-    text = text
+    text =
+      text
       .replace(/```json/gi,"")
       .replace(/```/g,"")
       .trim();
 
-    const film = JSON.parse(text);
+    const film =
+      JSON.parse(text);
 
     displayFilm(film);
 
     status.innerHTML =
-      '<span class="success">✅ Storyboard berhasil dibuat oleh Gemini.</span>';
+      '<span class="success">✅ Storyboard 24 scene berhasil dibuat oleh Gemini.</span>';
 
   }catch(error){
 
@@ -312,82 +565,153 @@ ${lyrics}
 
 function displayFilm(film){
 
-  const result = document.getElementById("result");
+  const result =
+    document.getElementById("result");
 
   let html = "";
 
   html += `
+
   <div class="card">
 
-    <h2>🎬 ${escapeHtml(film.film_title || "")}</h2>
+    <h2>🎬 ${escapeHtml(
+      film.film_title || ""
+    )}</h2>
 
-    <p>${escapeHtml(film.logline || "")}</p>
+    <p>
+      ${escapeHtml(
+        film.logline || ""
+      )}
+    </p>
 
-    <h3>🎭 Karakter Utama</h3>
+    <h3>👤 Karakter Utama</h3>
 
     <div class="character">
-      <b>Nama:</b> ${escapeHtml(film.main_character?.name || "")}<br>
-      <b>Gender:</b> ${escapeHtml(film.main_character?.gender || "")}<br>
-      <b>Usia:</b> ${escapeHtml(film.main_character?.age || "")}<br>
-      <b>Penampilan:</b> ${escapeHtml(film.main_character?.appearance || "")}<br>
-      <b>Rambut:</b> ${escapeHtml(film.main_character?.hair || "")}<br>
-      <b>Pakaian:</b> ${escapeHtml(film.main_character?.clothing || "")}<br>
-      <b>Kepribadian:</b> ${escapeHtml(film.main_character?.personality || "")}
+
+      <b>Nama:</b>
+      ${escapeHtml(
+        film.main_character?.name || ""
+      )}<br>
+
+      <b>Gender:</b>
+      ${escapeHtml(
+        film.main_character?.gender || ""
+      )}<br>
+
+      <b>Usia:</b>
+      ${escapeHtml(
+        film.main_character?.age || ""
+      )}<br>
+
+      <b>Penampilan:</b>
+      ${escapeHtml(
+        film.main_character?.appearance || ""
+      )}<br>
+
+      <b>Rambut:</b>
+      ${escapeHtml(
+        film.main_character?.hair || ""
+      )}<br>
+
+      <b>Pakaian:</b>
+      ${escapeHtml(
+        film.main_character?.clothing || ""
+      )}<br>
+
+      <b>Kepribadian:</b>
+      ${escapeHtml(
+        film.main_character?.personality || ""
+      )}
+
     </div>
 
-    <h3>🎨 Gaya Visual</h3>
-    <p>${escapeHtml(film.visual_style || "")}</p>
+    <h3>🎨 Visual Style</h3>
 
-    <h3>🌙 Mood Warna</h3>
-    <p>${escapeHtml(film.color_mood || "")}</p>
+    <p>
+      ${escapeHtml(
+        film.visual_style || ""
+      )}
+    </p>
+
+    <h3>🌙 Color Mood</h3>
+
+    <p>
+      ${escapeHtml(
+        film.color_mood || ""
+      )}
+    </p>
 
   </div>
+
   `;
 
-  html += `<div class="card"><h2>🎞️ 24 Cinematic Scenes</h2>`;
+  html += `
+  <div class="card">
+  <h2>🎞️ Cinematic Storyboard — 24 Scenes</h2>
+  `;
 
   (film.scenes || []).forEach(scene => {
 
     html += `
+
     <div class="scene">
 
       <div class="scene-number">
-        SCENE ${escapeHtml(String(scene.scene || ""))}
+        SCENE ${escapeHtml(
+          String(scene.scene || "")
+        )}
       </div>
 
-      <h3>${escapeHtml(scene.time || "")}</h3>
+      <h3>
+        ${escapeHtml(
+          scene.time || ""
+        )}
+      </h3>
 
       <p>
         <b>Story:</b><br>
-        ${escapeHtml(scene.story || "")}
+        ${escapeHtml(
+          scene.story || ""
+        )}
       </p>
 
       <p>
         <b>Visual:</b><br>
-        ${escapeHtml(scene.visual || "")}
+        ${escapeHtml(
+          scene.visual || ""
+        )}
       </p>
 
       <p>
         <b>Camera:</b><br>
-        ${escapeHtml(scene.camera || "")}
+        ${escapeHtml(
+          scene.camera || ""
+        )}
       </p>
 
       <p>
         <b>Lighting:</b><br>
-        ${escapeHtml(scene.lighting || "")}
+        ${escapeHtml(
+          scene.lighting || ""
+        )}
       </p>
 
       <p>
         <b>Emotion:</b><br>
-        ${escapeHtml(scene.emotion || "")}
+        ${escapeHtml(
+          scene.emotion || ""
+        )}
       </p>
 
       <p class="prompt">
-        <b>AI Video Prompt:</b><br>
-        ${escapeHtml(scene.video_prompt || "")}
+        <b>🎥 AI Video Prompt:</b><br>
+        ${escapeHtml(
+          scene.video_prompt || ""
+        )}
       </p>
 
     </div>
+
     `;
 
   });
@@ -395,15 +719,21 @@ function displayFilm(film){
   html += `</div>`;
 
   result.innerHTML = html;
+
 }
 
 function escapeHtml(value){
 
   return String(value)
+
     .replace(/&/g,"&amp;")
+
     .replace(/</g,"&lt;")
+
     .replace(/>/g,"&gt;")
+
     .replace(/"/g,"&quot;")
+
     .replace(/'/g,"&#039;");
 
 }
