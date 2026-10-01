@@ -14,9 +14,11 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: "GEMINI_API_KEY belum dipasang di Vercel" });
     }
 
-    // Gunakan nama model yang valid, contoh: gemini-1.5-flash atau gemini-2.0-flash
+    // Gunakan nama model yang valid (misal: gemini-1.5-flash)
     const url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent";
-    const maxAttempts = 4;
+    
+    // Disesuaikan menjadi 2x percobaan agar tidak melebih rentang timeout 10 detik Vercel
+    const maxAttempts = 2; 
     let lastStatus = 500;
     let lastError = null;
 
@@ -61,23 +63,19 @@ export default async function handler(req, res) {
 
         lastError = data?.error?.message || data?.message || data?.raw || `Gemini HTTP ${response.status}`;
 
-        /* Retry hanya untuk error sementara:
-           408 = Timeout, 429 = Rate limit, 500-599 = Server error
-        */
+        // Retry hanya untuk error sementara (408, 429, 500-599)
         const retryable = response.status === 408 || response.status === 429 || response.status >= 500;
         if (!retryable) {
           return res.status(response.status).json({ error: lastError, status: response.status, details: data });
         }
 
         if (attempt < maxAttempts) {
-          const delay = Math.pow(2, attempt - 1) * 1000;
-          await new Promise(resolve => setTimeout(resolve, delay));
+          await new Promise(resolve => setTimeout(resolve, 1000));
         }
       } catch (error) {
         lastError = error.message;
         if (attempt < maxAttempts) {
-          const delay = Math.pow(2, attempt - 1) * 1000;
-          await new Promise(resolve => setTimeout(resolve, delay));
+          await new Promise(resolve => setTimeout(resolve, 1000));
         }
       }
     }
