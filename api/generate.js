@@ -1,109 +1,158 @@
 export default async function handler(req, res) {
-  // Hanya menerima POST
   if (req.method !== "POST") {
     return res.status(405).json({
-      success: false,
       error: "Method not allowed"
     });
   }
 
   try {
-    // Ambil prompt dari aplikasi
     const { prompt } = req.body || {};
 
-    if (!prompt || typeof prompt !== "string") {
+    if (!prompt) {
       return res.status(400).json({
-        success: false,
         error: "Prompt belum diberikan"
       });
     }
 
-    // Ambil API key dari Vercel Environment Variables
     const apiKey = process.env.GEMINI_API_KEY;
 
     if (!apiKey) {
       return res.status(500).json({
-        success: false,
-        error: "GEMINI_API_KEY belum tersedia di Vercel Environment Variables"
+        error: "GEMINI_API_KEY belum dipasang di Vercel"
       });
     }
 
-    // Panggil Gemini
-    const response = await fetch(
-      "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-goog-api-key": apiKey
-        },
-        body: JSON.stringify({
-          contents: [
-            {
-              role: "user",
-              parts: [
-                {
-                  text: prompt
-                }
-              ]
-            }
-          ]
-        })
+    const url =
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent";
+
+    const maxAttempts = 4;
+
+    let lastStatus = 500;
+    let lastError = null;
+
+    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+
+      try {
+
+        const response = await fetch(url, {
+          method: "POST",
+
+          headers: {
+            "Content-Type": "application/json",
+            "x-goog-api-key": apiKey
+          },
+
+          body: JSON.stringify({
+            contents: [
+              {
+                parts: [
+                  {
+                    text: prompt
+                  }
+                ]
+              }
+            ]
+          })
+        });
+
+        const rawText = await response.text();
+
+        let data = null;
+
+        try {
+          data = JSON.parse(rawText);
+        } catch {
+          data = {
+            raw: rawText
+          };
+        }
+
+        if (response.ok) {
+
+          const text =
+            data?.candidates?.[0]?.content?.parts
+              ?.map(part => part.text || "")
+              .join("") || "";
+
+          if (!text) {
+            return res.status(502).json({
+              error: "Gemini tidak mengembalikan teks.",
+              details: data
+            });
+          }
+
+          return res.status(200).json({
+            success: true,
+            text
+          });
+        }
+
+        lastStatus = response.status;
+
+        lastError =
+          data?.error?.message ||
+          data?.message ||
+          data?.raw ||
+          `Gemini HTTP ${response.status}`;
+
+        /*
+          Retry hanya untuk error sementara.
+          408 = timeout
+          429 = terlalu banyak request
+          500-599 = server/service error
+        */
+
+        const retryable =
+          response.status === 408 ||
+          response.status === 429 ||
+          response.status >= 500;
+
+        if (!retryable) {
+          return res.status(response.status).json({
+            error: lastError,
+            status: response.status,
+            details: data
+          });
+        }
+
+        if (attempt < maxAttempts) {
+
+          const delay =
+            Math.pow(2, attempt - 1) * 1000;
+
+          await new Promise(resolve =>
+            setTimeout(resolve, delay)
+          );
+        }
+
+      } catch (error) {
+
+        lastError = error.message;
+
+        if (attempt < maxAttempts) {
+
+          const delay =
+            Math.pow(2, attempt - 1) * 1000;
+
+          await new Promise(resolve =>
+            setTimeout(resolve, delay)
+          );
+        }
       }
-    );
-
-    // Baca respons Gemini sebagai text terlebih dahulu
-    const responseText = await response.text();
-
-    let data;
-
-    try {
-      data = JSON.parse(responseText);
-    } catch {
-      return res.status(502).json({
-        success: false,
-        error: "Respons Gemini bukan JSON",
-        details: responseText.slice(0, 1000)
-      });
     }
 
-    // Kalau Gemini mengembalikan error
-    if (!response.ok) {
-      return res.status(502).json({
-        success: false,
-        error: "Gemini API error",
-        status: response.status,
-        details: data
-      });
-    }
-
-    // Ambil teks hasil Gemini
-    const text =
-      data?.candidates?.[0]?.content?.parts
-        ?.map(part => part.text || "")
-        .join("") || "";
-
-    if (!text) {
-      return res.status(502).json({
-        success: false,
-        error: "Gemini tidak menghasilkan teks",
-        details: data
-      });
-    }
-
-    // Berhasil
-    return res.status(200).json({
-      success: true,
-      text
+    return res.status(502).json({
+      error: lastError || "Gemini gagal dipanggil.",
+      status: lastStatus,
+      attempts: maxAttempts,
+      message:
+        "Gemini gagal setelah beberapa percobaan. Silakan coba lagi beberapa saat kemudian."
     });
 
   } catch (error) {
-    console.error("SERVER ERROR:", error);
 
     return res.status(500).json({
-      success: false,
-      error: "Server error",
-      details: error?.message || String(error)
+      error: error.message || "Server error"
     });
   }
 }
